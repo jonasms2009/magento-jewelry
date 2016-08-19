@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<config>
+	<tabs>
+	<socialshareconfig translate="label" module="socialshare">
+            <label>Social Share Config</label>
+            <sort_order>1</sort_order>
+        </socialshareconfig>
+    </tabs>
+    <sections>
+		<socialshare_options translate="label" module="socialshare">
+				<label>Social Share Set</label>
+				<tab>socialshareconfig</tab>
+				<frontend_type>text</frontend_type>
+				<sort_order>1000</sort_order>
+				<show_in_default>1</show_in_default>
+				<show_in_website>1</show_in_website>
+				<show_in_store>1</show_in_store>   
+				
+				<groups>  
+				                <email translate="label">  
+				                    <label>Set Email Template</label>  
+				                    <frontend_type>text</frontend_type>  
+				                    <sort_order>5</sort_order>  
+				                    <show_in_default>1</show_in_default>  
+				                    <show_in_website>0</show_in_website>  
+				                    <show_in_store>0</show_in_store>  
+				                    <fields>  
+				                            <template translate="label">  
+				                                <label>Socialshare Email template</label>  
+				                                <frontend_type>select</frontend_type>  
+				                                <source_model>adminhtml/system_config_source_email_template</source_model>  
+				                                <sort_order>1</sort_order>  
+				                                <show_in_default>1</show_in_default>  
+				                                <show_in_website>1</show_in_website>  
+				                                <show_in_store>1</show_in_store>  
+				                            </template>  
+				                    </fields>  
+				                </email>  
+            			</groups>  
+				
+				
+				<groups>
+				
+					<messages translate="label">
+						<label>Social Share Basic Settings</label>
+						<frontend_type>text</frontend_type>
+						<sort_order>1</sort_order>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store> 
+					 	<fields>
+								<socialshareEnable translate="label">
+									<label>Enable This Plugin</label>
+									<frontend_type>select</frontend_type>
+									<source_model>adminhtml/system_config_source_yesno</source_model>
+									<sort_order>1</sort_order>
+									<show_in_default>1</show_in_default>
+									<show_in_website>1</show_in_website>
+									<show_in_store>1</show_in_store>
+								</socialshareEnable>
+								<facebookEnable translate="label">
+									<label>Enable Facebook</label>
+									<frontend_type>select</frontend_type>
+									<source_model>adminhtml/system_config_source_yesno</source_model>
+									<sort_order>2</sort_order>
+									<show_in_default>1</show_in_default>
+									<show_in_website>1</show_in_website>
+									<show_in_store>1</show_in_store>
+								</facebookEnable>
+								<tweeterEnable translate="label">
+																	<label>Enable Tweeter</label>
+																	<frontend_type>select</frontend_type>
+																	<source_model>adminhtml/system_config_source_yesno</source_model>
+																	<sort_order>3</sort_order>
+																	<show_in_default>1</show_in_default>
+																	<show_in_website>1</show_in_website>
+																	<show_in_store>1</show_in_store>
+								</tweeterEnable>
+								<pinEnable translate="label">
+																	<label>Enable Pinterest </label>
+																	<frontend_type>select</frontend_type>
+																	<source_model>adminhtml/system_config_source_yesno</source_model>
+																	<sort_order>4</sort_order>
+																	<show_in_default>1</show_in_default>
+																	<show_in_website>1</show_in_website>
+																	<show_in_store>1</show_in_store>
+								</pinEnable>
+								<amazonEnable translate="label">
+																	<label>Enable Amazon</label>
+																	<frontend_type>select</frontend_type>
+																	<source_model>adminhtml/system_config_source_yesno</source_model>
+																	<sort_order>5</sort_order>
+																	<show_in_default>1</show_in_default>
+																	<show_in_website>1</show_in_website>
+																	<show_in_store>1</show_in_store>
+								</amazonEnable>
+								<googleEnable translate="label">
+																	<label>Enable Google +1</label>
+																	<frontend_type>select</frontend_type>
+																	<source_model>adminhtml/system_config_source_yesno</source_model>
+																	<sort_order>6</sort_order>
+																	<show_in_default>1</show_in_default>
+																	<show_in_website>1</show_in_website>
+																	<show_in_store>1</show_in_store>
+								</googleEnable>
+								<tumblrEnable translate="label">
+										<label>Enable Tumblr</label>
+										<frontend_type>select</frontend_type>
+										<source_model>adminhtml/system_config_source_yesno</source_model>
+										<sort_order>6</sort_order>
+										<show_in_default>1</show_in_default>
+										<show_in_website>1</show_in_website>
+										<show_in_store>1</show_in_store>
+								</tumblrEnable>
+								<linkdinEnable translate="label">
+										<label>Enable Linkdin</label>
+										<frontend_type>select</frontend_type>
+										<source_model>adminhtml/system_config_source_yesno</source_model>
+										<sort_order>7</sort_order>
+										<show_in_default>1</show_in_default>
+										<show_in_website>1</show_in_website>
+										<show_in_store>1</show_in_store>
+								</linkdinEnable>
+						</fields>
+					</messages>
+				</groups>                
+			</socialshare_options>
+	</sections>
+</config>

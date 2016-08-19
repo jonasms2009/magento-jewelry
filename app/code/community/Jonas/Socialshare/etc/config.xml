@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<config> 
+    <modules>
+        <Jonas_Socialshare>
+            <version>0.1.0</version>
+        </Jonas_Socialshare>
+    </modules>
+	<frontend>
+	<layout>
+            <updates>
+                <socialshare>
+                    <file>socialshare.xml</file>
+                </socialshare>
+            </updates>
+        </layout>
+       
+        <routers>
+            <socialshare>
+                <use>standard</use>
+                <args>
+                    <module>Jonas_Socialshare</module>
+                    <frontName>socialshare</frontName>
+                </args>
+            </socialshare>
+        </routers>  
+    </frontend>
+	<admin>
+        <routers>
+			<socialshare>
+				<use>admin</use>
+				<args>
+					<module>Jonas_Socialshare</module>
+					<frontName>socialshare</frontName>
+				</args>
+			</socialshare>
+        </routers>
+    </admin>
+	<adminhtml>
+	<acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <socialshare_options>
+                                            <title>Store Social Share Module Section</title>
+                                        </socialshare_options>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+		
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<Jonas_Socialshare>
+							<title>Socialshare Module</title>
+							<sort_order>10</sort_order>
+						</Jonas_Socialshare>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<socialshare>
+					<file>socialshare.xml</file>
+				</socialshare>
+			</updates>
+		</layout>
+    </adminhtml>   
+	<global>
+	<models>
+            <socialshare>
+                <class>Jonas_Socialshare_Model</class>
+                <resourceModel>socialshare_mysql4</resourceModel>
+            </socialshare>
+            <socialshare_mysql4>
+                <class>Jonas_Socialshare_Model_Mysql4</class>
+                <entities>
+                    <sharecoupon>
+                        <table>share_coupon</table>
+                    </sharecoupon>
+                </entities>
+            </socialshare_mysql4>
+        </models>
+        <resources>
+            <socialshare_setup>
+                <setup>
+                    <module>Jonas_Socialshare</module>
+                    <class>Jonas_Socialshare_Model_Setup_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </socialshare_setup>
+            <socialshare_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </socialshare_write>
+            <socialshare_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </socialshare_read>
+        </resources>
+		
+	<blocks>
+            <socialshare>
+                <class>Jonas_Socialshare_Block</class>
+            </socialshare>
+    </blocks>
+	<helpers>
+            <socialshare>
+                <class>Jonas_Socialshare_Helper</class>
+            </socialshare>
+    </helpers>
+    <template>
+    		<email>
+    
+    			<socialshare_options_email_template translate="label" module="socialshare">
+    				<label>Social Share Email Template</label>
+    				<file>socialshare_email_template.html</file>
+    				<type>html</type>
+    			</socialshare_options_email_template>
+    
+    		</email>
+	</template>
+    
+  </global>
+	
+  <default>
+       
+	<socialshare_options>
+            <email>
+                <sender>general</sender>
+		<template>socialshare_options_email_template</template>
+            </email>
+        </socialshare_options>
+   </default>	
+</config>

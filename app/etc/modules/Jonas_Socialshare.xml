@@ -1,0 +1,9 @@
+
+<config>
+    <modules>
+        <Jonas_Socialshare>
+            <active>true</active>
+            <codePool>community</codePool>
+            </Jonas_Socialshare>
+    </modules>
+</config>
