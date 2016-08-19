@@ -1,0 +1,77 @@
+
+<?php 
+
+if( $this->getRequest()->getParam('c') ){ 
+$coupon_id = $this->getRequest()->getParam('c');
+
+$coupon = Mage::getModel('socialshare/sharecoupon')->getCollection();
+$coupon -> addFieldToFilter('coupon_id',$coupon_id);
+$coupon = $coupon->getData();
+$coupon = $coupon[0];
+
+if(count($coupon)){
+	$coupon_code = $coupon['coupon_code'];
+	$data_expa = ceil(7 - (floor(time() - strtotime($coupon['create_date'])) / (24*3600)));
+
+	if($data_expa < 1){
+		$exp_code = "Coupon code has expired.<br/>You can let your friends share this coupon code again.";
+	}else {
+		Mage::getModel('socialshare/sharecoupon')->addCouponToSystem($coupon['create_date'],$coupon_code);
+		
+		$exp_code = "<p class = 'coupon'>You get a coupon code<BR/>
+<span style='font-size:15px;font-weight: bold'>$coupon_code</span>
+<p>You can get 5% discount<br/>This coupon can only used once and valid in $data_expa days</p>";
+	}
+}else{
+	return '';
+}
+
+}else return ;
+
+?>
+<script type="text/javascript">
+var intervalId = null;
+function slideAd(id,nStayTime,sState,nMaxHth,nMinHth){
+  this.stayTime=nStayTime*1000 || 3000;
+  this.maxHeigth=nMaxHth || 100;
+  this.minHeigth=nMinHth || 0;
+  this.state=sState || "down" ;
+  var obj = document.getElementById(id);
+  if(intervalId != null)window.clearInterval(intervalId);
+  function openBox(){
+   var h = obj.offsetHeight;
+   obj.style.height = ((this.state == "down") ? (h + 2) : (h - 2))+"px";
+    if(obj.offsetHeight>this.maxHeigth){
+    window.clearInterval(intervalId);
+    intervalId=window.setInterval(closeBox,this.stayTime);
+    }
+    if (obj.offsetHeight<this.minHeigth){
+    window.clearInterval(intervalId);
+    obj.style.display="none";
+    }
+  }
+  function closeBox(){
+   slideAd(id,this.stayTime,"up",nMaxHth,nMinHth);
+  }
+  intervalId = window.setInterval(openBox,10);
+}
+</script>
+<style type="text/css">
+.xboxcontent{
+
+}
+</style>
+
+
+
+<div id="coupondiv" style="color:#FFFFFF ;font-weight:bold;margin: 0 auto;background:gray;height:12px;text-align:center;overflow:hidden;position:relative;width: 50%;border-radius: 2px;behavior: url(<?php echo $this->getSkinUrl('socialshare/ie-css3.htc')?>);">
+<?php echo $exp_code?>
+<div id="closeb" style="position:absolute;right:4px;top:4px">
+<a href="javascript:;" onclick="slideAd('coupondiv',3000,'up',130,0);" title="close"><img src="<?php echo $this->getSkinUrl('socialshare/images/close.gif')?>" /></a>
+</div>
+</div>
+<script type="text/javascript">
+<!--
+ slideAd('coupondiv',30);
+-->
+</script>

@@ -1,0 +1,333 @@
+<?php if(! $this->socialhareEnable())return '';?> 
+
+<?php
+if(! $_product){
+	$_product = Mage::registry('current_product') ;
+}
+$customer = Mage::getSingleton('customer/session')->getCustomer();  
+$email = $customer->getEmail();
+$username = $customer->getFirstname().' '.$customer->getLastname();
+$baseUrl =Mage::getBaseUrl();
+$currentUrl = $org_Url = Mage::helper('core/url')->getCurrentUrl();
+$desc = $_product->getDescription();
+$name = $_product->getName();
+$coupon = substr(str_shuffle('abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 10); 
+$coupon_id = substr(md5($coupon.time()),0,16);
+if(strpos($currentUrl,'?') !== false){
+	$currentUrl = $currentUrl."&c=$coupon_id";
+}else {
+	$currentUrl = $currentUrl."?c=$coupon_id";
+}
+
+$imageUrl = Mage::getModel('catalog/product_media_config')->getMediaUrl( $_product->getImage() );//(string)Mage::helper('catalog/image')->init($_product, 'image');
+
+$share_code = '';
+if($this->facebookEnable()){
+	$share_code .= '<script>
+function fbs_click(){
+u="'.$currentUrl.'";
+t="'.$name.'";
+window.open("http://www.facebook.com/sharer.php?u="+encodeURIComponent(u)+"&t="+encodeURIComponent(t),"sharer","toolbar=0,status=0,width=926,height=636");
+return false;
+}
+</script>
+<a onclick="return fbs_click()" target="_blank"> <img src= "'.$this->getSkinUrl('socialshare/images/fbn.png').'" alt="" /></a>&nbsp;';
+	
+}
+if($this->tweeterEnable()){
+	$share_code .= '<a href="https://twitter.com/share" class="twitter-share-button" data-related="jasoncosta" data-url="'.$currentUrl.'" data-size="large" data-count="none" data-text="'.$name.'" data-via="'.$username.'">Tweet</a>&nbsp;
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
+}
+if($this->pinEnable()){
+	
+	$currentUrl_pin = urlencode($currentUrl);
+	$imageUrl_pin = urlencode($imageUrl);
+		$share_code .= '<a href="//www.pinterest.com/pin/create/button/?url='.$currentUrl_pin.'&media='.$imageUrl_pin.'&description='.$name.'" data-pin-do="buttonPin" data-pin-config="none" data-pin-color="red" data-pin-height="28"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_red_28.png" /></a>&nbsp;&nbsp;';
+}
+if($this->amazonEnable()){
+	$share_code .= '<script id="AddToAUWLButton" language="JavaScript1.2" type="text/javascript" src="http://www.amazon.com/wishlist/bookmarklet/getbutton.js?image=3"> </script>';
+}
+if($this->googleEnable()){
+	$share_code .= '
+<div class="g-plusone" data-annotation="none" data-href="'.$currentUrl.'" ></div>
+<script type="text/javascript">
+  window.___gcfg = {lang: "zh-CN"};
+
+  (function() {
+    var po = document.createElement("script"); po.type = "text/javascript"; po.async = true;
+    po.src = "https://apis.google.com/js/platform.js";
+    var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>';
+}
+if($this->tumblrEnable()){
+	$imageUrl_tmb = urlencode($imageUrl);
+	$currentUrl_tmb = urlencode($currentUrl);
+	$share_code .= '<script src="http://platform.tumblr.com/v1/share.js"></script>
+	<a href="http://www.tumblr.com/share/photo?source='.$imageUrl_tmb.'&caption='.$name.' '.$currentUrl_tmb.'&click_thru=http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fjfisher%2F5601726196" title="Share on Tumblr" style="display:inline-block; text-indent:-9999px; overflow:hidden; width:65px; height:23px; background:url(\'http://platform.tumblr.com/v1/share_2.png\') top left no-repeat transparent;">Share on Tumblr</a>';
+}
+if($this->linkdinEnable()){
+	$share_code .= '<script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+<script type="IN/Share" data-url="'.$currentUrl.'" data-photo="'.$imageUrl.'"></script>';
+}
+
+if(Mage::getSingleton('customer/session')->isLoggedIn()){
+
+	$content = "";
+	$share_code .= '<span ><a  href="javascript:void(0);"  onclick="openDialog();"><img  src="'.$this->getSkinUrl('socialshare/images/email2.png').'" alt="asdf" border="0" /></a></span>';
+}
+
+$adddata = array('coupon_id'=>$coupon_id,'coupon_code'=>$coupon,'create_date'=>date('Y-m-d H:i:s'));
+$res=Mage::getModel('socialshare/sharecoupon')->addData($adddata)->save();
+
+?>
+<style type="text/css">
+ 		.a1,.a2{width:0; height:0; overflow:hidden; border-width:10px; border-style:dotted dotted solid;  position:absolute}
+        .abox{position: absolute; width:20px; height: 20px; left:20px; top:-20px}
+        .a1{border-color:transparent transparent #000000;  top:-1px}
+        .a2{border-color:transparent transparent #F0F0F0;  top:0}
+        #btnShow {height:30px;line-height:25px;overflow:hidden; margin:10px 5px;font-weight:bold;cursor:pointer;  }
+        #btnShow img{width:30px;height:25px} 
+        .popcontent img{width:30px;height:23px;margin-top: 3px;} 
+        #divPop{background-color: #f0f0f0; border: solid 1px; position: absolute; display:none; width: 450px; height: 130px;}
+    
+DIV.neat-dialog-cont { 
+Z-INDEX: 98; BACKGROUND: none transparent scroll repeat 0% 0%; LEFT: 0px; WIDTH: 100%; POSITION: absolute; TOP: 0px; HEIGHT: 100% 
+} 
+DIV.neat-dialog-bg { 
+Z-INDEX: -1; FILTER: alpha(opacity=70); LEFT: 0px; WIDTH: 100%; POSITION: absolute; TOP: 0px; HEIGHT: 100%; BACKGROUND-COLOR: #eee; opacity: 0.7 
+} 
+DIV.neat-dialog { 
+BORDER-RIGHT: #555 1px solid; BORDER-TOP: #555 1px solid; Z-INDEX: 99; MARGIN-LEFT: auto; BORDER-LEFT: #555 1px solid; WIDTH: 60%;height: 450px; MARGIN-RIGHT: auto; BORDER-BOTTOM: #555 1px solid; POSITION: relative; TOP: 25%; BACKGROUND-COLOR: #fff 
+} 
+DIV.neat-dialog-title { 
+PADDING-RIGHT: 0.3em; font-weight:bold; PADDING-LEFT: 0.3em; FONT-SIZE: 1.2em; PADDING-BOTTOM: 0.1em; MARGIN: 0px; LINE-HEIGHT: 1.8em; PADDING-TOP: 0.1em; BORDER-BOTTOM: #444 1px solid; POSITION: relative 
+} 
+IMG.nd-cancel { 
+RIGHT: 0.2em; POSITION: absolute; TOP: 0.2em 
+} 
+DIV.neat-dialog P { 
+PADDING-RIGHT: 0.2em; PADDING-LEFT: 0.2em; PADDING-BOTTOM: 0.2em; PADDING-TOP: 0.2em; TEXT-ALIGN: center 
+}         
+        
+</style>
+<script type="text/javascript">  
+		
+        jQuery(document).ready(function()  
+        {  
+            //动画速度  
+            var speed = 500;  
+ 
+            //绑定事件处理  
+            jQuery("#btnShow").click(function(event)  
+            {  
+                //取消事件冒泡  
+                event.stopPropagation();  
+                //设置弹出层位置  
+                var offset = jQuery(event.target).offset();  
+               // alert(offset.top);alert(jQuery(event.target).height());
+                jQuery("#divPop").css({ top: offset.top + jQuery(event.target).height() + 10  + "px", left: offset.left });  
+                //动画显示  
+                jQuery("#divPop").show(speed);
+ 
+            });  
+            
+            //单击空白区域隐藏弹出层  
+             jQuery(document).click(function(event) { jQuery("#divPop").hide(speed) });  
+            //单击弹出层则自身隐藏  
+            jQuery("#divPop").click(function(event) { jQuery("#divPop").hide(speed) });  
+        });  
+        
+function NeatDialog(sHTML, sTitle, bCancel) 
+{ 
+	window.neatDialog = null; 
+	this.elt = null; 
+	if (document.createElement && document.getElementById) 
+	{ 
+		var dg = document.createElement("div"); 
+		dg.className = "neat-dialog"; 
+		if (sTitle) 
+		sHTML = '<div class="neat-dialog-title">'+sTitle+ ((bCancel)? '<img src="x.gif" alt="Cancel" class="nd-cancel" />':'')+ '</div>\n' + sHTML; 
+		dg.innerHTML = sHTML; 
+		
+		var dbg = document.createElement("div"); 
+		dbg.id = "nd-bdg"; 
+		dbg.className = "neat-dialog-bg"; 
+		
+		var dgc = document.createElement("div"); 
+		dgc.className = "neat-dialog-cont"; 
+		dgc.appendChild(dbg); 
+		dgc.appendChild(dg); 
+		
+		//adjust positioning if body has a margin 
+		if (document.body.offsetLeft > 0) dgc.style.marginLeft = document.body.offsetLeft + "px"; 
+		
+		document.body.appendChild(dgc); 
+		if (bCancel) document.getElementById("nd-cancel").onclick = function() 
+		{ 
+			window.neatDialog.close(); 
+		}; 
+		this.elt = dgc; 
+		window.neatDialog = this; 
+	} 
+} 
+NeatDialog.prototype.close = function() 
+{ 
+	if (this.elt) 
+	{ 
+		this.elt.style.display = "none"; 
+		this.elt.parentNode.removeChild(this.elt); 
+	} 
+	window.neatDialog = null; 
+} 
+
+function sendEmail(){
+
+	var url = '<?php echo $baseUrl ;?>' + 'socialshare/ajax/sendemail';
+	//var fromemail = $('[name="fromemail"]')[0].value;
+	//var tofriend = $('[name="tofriend"]')[0].value;
+	var tofriend =document.getElementById('sendto').value;
+	//var cSubject = $('[name="cSubject"]')[0].value;
+	//var tofriend = $('[name="tofriend"]')[0].value;
+	var cSubject =document.getElementById('cSubject').value;
+	var purl = '<?php echo $currentUrl ;?>';
+	//var note = $('[name="note"]')[0].value;
+	var note =document.getElementById('email-content').value;
+	var pname = '<?php echo $_product->getName() ;?>';
+	var imageurl = '<?php echo $imageUrl ;?>';
+	
+	document.getElementById('meassge-tips-succ').style.display='none';
+	document.getElementById('meassge-tips-error').style.display='none';
+	document.getElementById('sendto-tips-email').style.display='none';
+	document.getElementById('sendto-tips').style.display='none';
+	if(!tofriend){
+		document.getElementById('sendto-tips').style.display='';
+		document.getElementById("sendto").focus(); 
+		return false;
+	}else{
+		document.getElementById('sendto-tips').style.display='none';
+	}
+	
+     var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+     if(!myreg.test(tofriend))
+     {
+          document.getElementById('sendto-tips-email').style.display='';
+          document.getElementById("sendto").focus(); 
+          return false;
+     }else{
+     	document.getElementById('sendto-tips-email').style.display='none';
+     }
+        
+	
+	if(!note){
+		document.getElementById('note-tips').style.display='';
+		document.getElementById("email-content").focus(); 
+		return false;
+	}else{
+		document.getElementById('note-tips').style.display='none';
+	}
+	
+	document.getElementById('meassge-tips-succ-hold').style.display='';
+       new Ajax.Request(url, {
+            method: 'post',
+           // data: "emailfrom="+emailfrom,
+			parameters: {
+  
+                   tofriend: tofriend,
+                   cSubject: cSubject,
+                   note: note,
+                   pname:pname,
+                   purl:purl,
+                   imageurl:imageurl
+                },
+            onSuccess: function(text) {
+				//shipdata = text.responseText.evalJSON(true);
+				document.getElementById('meassge-tips-succ-hold').style.display='none';
+				document.getElementById('meassge-tips-succ').style.display='';
+				//$('meassge-tips').style.display='';
+            },
+            onFailure: function() {
+            	document.getElementById('meassge-tips-succ-hold').style.display='none';
+            	document.getElementById('meassge-tips-error').style.display='';
+                return false;
+            },
+            onException: function() {
+            	document.getElementById('meassge-tips-succ-hold').style.display='none';
+            	document.getElementById('meassge-tips-error').style.display='';
+                return false;
+            }
+        });
+
+		return true;
+	
+	
+	
+}
+function openDialog() 
+{ 
+	var sHTML = 
+	'<div align="center" ><table align="center" width="100%"  style=" border-collapse:   separate;   border-spacing:   10px;  ">'+
+　 '<tr><td align="right"  width="20%"> To: </td><td align="left"  width="80%"><input style="width:80%" id="sendto" type="text" value=""  maxlength="255" name="tofriend" ></td></tr>'+
+　 '<tr style="display:none" id="sendto-tips"><td align="right"  width="20%"></td><td align="left"  width="80%"><span style="font-weight:bold;color:red" >Please input Email Address!</span></td></tr>'+
+　 '<tr style="display:none" id="sendto-tips-email"><td align="right"  width="20%"></td><td align="left"  width="80%"><span style="font-weight:bold;color:red" >Please input a valid Email Address!</span></td></tr>'+
+　 '<tr><td align="right" > Subject: </td><td align="left" ><input style="width:80%" type="text" value="<?php echo $_product->getName() ,' | ',Mage::getStoreConfig('general/store_information/name');?>" maxlength="1024" name="cSubject" id="cSubject"></td></tr>'+
+　  '<tr><td align="right" > Content: </td><td align="left" ><textarea style="width:80%;height: 80px;" name="note" id="email-content"></textarea></td></tr>'+
+　  　 '<tr style="display:none" id="note-tips"><td align="right"  width="20%"></td><td align="left"  width="80%"><span style="font-weight:bold;color:red" >Please input Content!</span></td></tr>'+
+　 '<tr><td align="right" > Image: </td><td align="left" width="80%"><a href="<?php echo $imageUrl?>" target="_blank"><img src="<?php echo $imageUrl?>" alt="click to view" height="150" width="150"/></a></td></tr></table>'+
+
+	'<p><button onclick="return sendEmail();">Send Email</button>'+
+	'&nbsp;&nbsp;<button onclick="window.neatDialog.close()">close</button></p>'+
+	'<p id="meassge-tips-succ-hold" style="display:none"><span style="font-weight:bold;color:green">Please wait...</span></p>'+
+	'<p id="meassge-tips-succ" style="display:none"><span style="font-weight:bold;color:green">Email has been sent successfully!</span></p>'+
+	'<p id="meassge-tips-error" style="display:none"><span style="font-weight:bold;color:red">Email sent unsuccessfully!</span></p></div>'; 
+	new NeatDialog(sHTML, "Send Email To Friends!", false); 
+
+} 
+
+
+</script>  
+<div>
+    <div  id="btnShow" >
+    <img src="<?php echo $this->getSkinUrl('socialshare/images/email1.png');?>" alt="asdf" border="0" />
+    Get some advice and get a coupon
+    </div>
+    <p style="margin-top:10px">
+<iframe style="height:20px;width:80px" src="http://www.facebook.com/plugins/like.php?href=<?php echo urlencode($org_Url)?>&amp;layout=button_count&amp;show_faces=true&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=80" scrolling="no" frameborder="0" allowTransparency="true"><style>.data-connect-fb{z-index:0;position:relative;font-color:#333; font-size:12;}</style><a id="fb-data-button" href="http://www.add-facebook-like-button.com"class="data-connect-fb">add-facebook-like-button.com</a><style>.fbook-style_map:initreaction=10false_attempt10-border</style></iframe>
+
+    <a href="https://twitter.com/share" class="twitter-share-button" data-url="<?php echo $org_Url?>" data-via="<?php echo $username?>" data-lang="en">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    
+    
+<?php
+	$org_Url_pin = urlencode($org_Url);
+	$imageUrl_pin = urlencode($imageUrl);
+?>
+<a id="pinlike" href="//www.pinterest.com/pin/create/button/?url=<?php echo $org_Url_pin?>&media=<?php echo $imageUrl_pin?>&description=<?php echo $name?>" data-pin-do="buttonPin" data-pin-config="beside"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_gray_20.png" /></a>
+<script type="text/javascript" async src="//assets.pinterest.com/js/pinit.js"></script> 
+
+<div class="g-plusone" data-width="86px" data-href="<?php echo $org_Url?>"></div>
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/platform.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+  
+</script>
+
+    </p>
+    
+    </div>  
+   
+          
+    <!-- 弹出层 -->  
+    <div id="divPop" >  
+    <div class="abox"><div class="a1"></div><div class="a2"></div></div>
+    <div class="popcontent" style="padding:10px;" >
+    <p style="font-weight: bold">You can share this product with your friends by click these buttons ,so they can give you some advice.<br/>
+You and your friends also can get a coupon through the share link.
+</p><br/>
+<div align="center"top:50%; ">
+    <?php echo $share_code ;?></div>  </div>  
+    </div>  
+
