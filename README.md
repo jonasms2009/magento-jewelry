@@ -1,8 +1,9 @@
-magento-jewelry
+#magento 社交插件 适用于1.6-1.9版本
+
 ===============
 插件名称 Social Share plugin
 版本：0.1.0
-作者：Jnoas
+作者：Jonas
 
 安装步骤
 
@@ -21,7 +22,7 @@ magento-jewelry
 6：再次返回system->Configuration，在Set Email Template下的Socialshare Email template选择第五部里添加的Template Name，保存；
 
 
-第5，,6部请一定要设置正确，否则可能无法发送email；
+第5，6部请一定要设置正确，否则可能无法发送email；
 
 此插件效果可能会受到full page cache影响，每次请确保页面为第一次请求(clean cache)；或者在后台full page cache配置处，将sharecoupon和socialshareproduct这两个block过滤掉；
 
