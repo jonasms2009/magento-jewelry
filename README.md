@@ -1,4 +1,4 @@
-#magento 社交插件 适用于1.6-1.9版本
+#magento 社交插件
 
 ===============
 插件名称 Social Share plugin
